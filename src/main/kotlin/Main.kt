@@ -6,22 +6,17 @@ fun timeUnitsToString(absenceTime: Int, inMinutes: Boolean = true) = when {
     else -> if (inMinutes) "минут" else "часов"
 }
 
-fun agoToText(absenceTime: Int): String {
-    val secondsInMinute = 60
-    val secondsInHour = 60 * secondsInMinute
-    val secondsInDay = 24 * secondsInHour
-    val secondsInTwoDays = 2 * secondsInDay
-    val secondsInThreeDays = 3 * secondsInDay
-    val minutes = absenceTime / secondsInMinute
-    val hours = absenceTime / secondsInHour
-    return when {
-        (absenceTime < secondsInMinute) -> "только что"
-        (absenceTime < secondsInHour) -> "$minutes ${timeUnitsToString(minutes)} назад"
-        (absenceTime < secondsInDay) -> "$hours ${timeUnitsToString(hours, false)} назад"
-        (absenceTime < secondsInTwoDays) -> "вчера"
-        (absenceTime < secondsInThreeDays) -> "позавчера"
+fun agoToText(absenceTime: Int) = when {
+        (absenceTime < 60) -> "только что"
+        (absenceTime < 3_600) -> {val minutes = absenceTime / 60
+            "$minutes ${timeUnitsToString(minutes)} назад"
+        }
+        (absenceTime < 86_400) -> {val hours = absenceTime / 3600
+            "$hours ${timeUnitsToString(hours, false)} назад"
+        }
+        (absenceTime < 172_800) -> "вчера"
+        (absenceTime < 259_200) -> "позавчера"
         else -> "давно"
-    }
 }
 
 fun main() {
